@@ -3,13 +3,13 @@ from manim import SVGMobject
 import os
 
 class m_Card (SVGMobject, Card):
-    """Card is one of the basic building block of branen.
-    This object represents the french card in bridge, not the bidding card!
+    """Card is one of the basic building blocks of branen.
+    This object represents the french card in the bridge, not the bidding card!
     
     Examples
     --------
     .. code-block:: python
-        my_card = m_Card()
+        my_card = m_Card(suit="H", value="A")
     
     Parameters
     --------
