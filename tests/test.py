@@ -4,6 +4,7 @@ from typing import List
 
 from src.branen.Card import Card
 from src.branen.Table import Table
+from src.branen.Hand import Hand
 
 
 # from manim_branen.m_Card import m_Card
@@ -55,10 +56,10 @@ class TestTable(unittest.TestCase):
         hands = [Card().set(suit, value) for suit in suits for value in values]
         shuffle(hands)
         hands_input = {
-            "E": hands[:13],
-            "W": hands[14:26],
-            "N": hands[27:39],
-            "S": hands[38:],
+            "E": Hand(hands[:13]),
+            "W": Hand(hands[14:26]),
+            "N": Hand(hands[27:39]),
+            "S": Hand(hands[38:]),
         }
 
         table = Table(hands=hands_input, dealer="S")
