@@ -7,7 +7,7 @@ from src.branen.Card import Card
 
 class m_Card(SVGMobject, Card):
     """branen is one of the basic building blocks of branen.
-    This object represents the french card in the bridge, not the bidding card!
+    This object represents the French card in the bridge, not the bidding card!
 
     Examples
     --------
@@ -17,7 +17,7 @@ class m_Card(SVGMobject, Card):
     Parameters
     --------
     suit : :class:`str`
-        This is the suit of the card. It can be: `S`, `H`, `C`, `D`
+        This is the suit of the card. It can be: `S`, `H`, `D`, `C`
     value : :class:`str`
         This is the value of the card. It can be: `A`, `K`, `Q`, `J`, `T`, `9`, `...` , `2`
     """
