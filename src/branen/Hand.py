@@ -13,7 +13,7 @@ class Hand:
 
         self.hand = hand
 
-    def is_in_suit(self, suit: str) -> bool:
+    def has_suit(self, suit: str) -> bool:
         """
         Find the suit exist in hand.
 
@@ -27,6 +27,13 @@ class Hand:
         """
         for i in self.hand:
             if i.get_suit() == suit and not i.get_passive():
+                return True
+
+        return False
+
+    def has_card(self, card: Card) -> bool:
+        for i in self.hand:
+            if i == card:
                 return True
 
         return False
