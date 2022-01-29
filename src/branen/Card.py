@@ -10,7 +10,7 @@ class Card:
         **{str(i): i for i in range(2, 11)},
     }
 
-    is_passive = False
+    is_played = False
 
     def set(self, suit: str, value: str):
         self.suit = suit
@@ -22,23 +22,23 @@ class Card:
         return self.suit
 
     def reset(self) -> None:
-        self.set_passivity(False)
+        self.set_is_played(False)
         self.set_played_turn(0)
 
     def play(self):
-        if self.is_passive:
+        if self.is_played:
             Exception("This card was played!")
 
-        self.set_passivity(True)
+        self.set_is_played(True)
 
     def set_played_turn(self, turn: int) -> None:
         self.turn = turn
 
-    def get_passive(self) -> bool:
-        return self.is_passive
+    def get_is_played(self) -> bool:
+        return self.is_played
 
-    def set_passivity(self, p):
-        self.is_passive = p
+    def set_is_played(self, p):
+        self.is_played = p
 
     def get_value(self) -> str:
         return self.value

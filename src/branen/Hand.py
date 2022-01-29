@@ -26,7 +26,7 @@ class Hand:
         Suit exist in hand,
         """
         for i in self.hand:
-            if i.get_suit() == suit and not i.get_passive():
+            if i.get_suit() == suit and not i.get_is_played():
                 return True
 
         return False

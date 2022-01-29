@@ -73,7 +73,7 @@ class TestTable(unittest.TestCase):
             "After card playing, the next card player is not correct",
         )
         self.assertEqual(
-            table.get_hands()["S"][0].get_passive(),
+            table.get_hands()["S"][0].get_is_played(),
             True,
             "After playing, card wont bacome passive",
         )
