@@ -3,7 +3,18 @@ from typing import List
 
 
 class Hand:
-    CARD_TO_HCP = {"A": 4, "K": 3, "Q": 2, "J": 1}
+    CARD_TO_HCP = {
+        "A": 4,
+        "K": 3,
+        "Q": 2,
+        "J": 1,
+        "T": 0,
+        **{str(i): 0 for i in range(2, 11)},
+        "11": 1,
+        "12": 2,
+        "13": 3,
+        "14": 4,
+    }
 
     def __init__(self, hand: List[Card]):
         if hand is None:
