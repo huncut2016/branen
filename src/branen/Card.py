@@ -12,6 +12,10 @@ class Card:
 
     is_played = False
 
+    def __init__(self, suit: str, value: str):
+        self.suit = suit
+        self.value = value
+
     def set(self, suit: str, value: str):
         self.suit = suit
         self.value = value

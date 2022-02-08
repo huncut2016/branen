@@ -5,7 +5,7 @@ from manim import SVGMobject
 from src.branen.Card import Card
 
 
-class m_Card(SVGMobject, Card):
+class m_Card(SVGMobject):
     """branen is one of the basic building blocks of branen.
     This object represents the French card in the bridge, not the bidding card!
 
@@ -22,9 +22,13 @@ class m_Card(SVGMobject, Card):
         This is the value of the card. It can be: `A`, `K`, `Q`, `J`, `T`, `9`, `...` , `2`
     """
 
-    def __init__(self, suit: str, value: str, **kwargs):
-        self.set_value(value)
-        self.set_suit(suit)
+    def __init__(
+        self, card: Card = None, suit: str = None, value: str = None, **kwargs
+    ):
+        if Card is not None:
+            self.card = card
+        else:
+            self.card = Card(suit, value)
 
         file_path = os.path.join(
             os.path.dirname(__file__),
