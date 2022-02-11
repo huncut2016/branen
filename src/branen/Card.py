@@ -6,8 +6,8 @@ from functools import total_ordering
 class Card:
     SUIT_MAP = {"S": 3, "H": 2, "D": 1, "C": 0}
     VALUE_MAP = {
-        **{"A": 12, "K": 11, "Q": 12, "J": 11, "T": 10},
-        **{str(i): i for i in range(2, 11)},
+        **{"A": 14, "K": 13, "Q": 12, "J": 11, "T": 10},
+        **{str(i): i for i in range(2, 15)},
     }
 
     is_played = False
@@ -53,6 +53,9 @@ class Card:
                 f"The length of Card value name must be 1! (value name = {value})"
             )
 
+        if not value in self.VALUE_MAP:
+            raise Exception(f"Unknown value type (value name = {value})")
+
         self.value = value.upper()
 
     def set_suit(self, suit: str) -> None:
@@ -60,6 +63,9 @@ class Card:
             raise Exception(
                 f"The length of Card suit name must be 1! (suit name = {suit})"
             )
+
+        if not suit in self.SUIT_MAP:
+            raise Exception(f"Unknown suit type (suit name = {suit})")
 
         self.suit = suit.upper()
 
