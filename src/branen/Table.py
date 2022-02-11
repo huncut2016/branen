@@ -17,7 +17,7 @@ class Table:
 
         self.hands = hands
         self.dealer = dealer
-        self.current = dealer
+        self.current_player = dealer
         self.starting_suit: str = None
         self.round = 1
         self.in_play: List[Card] = []
@@ -36,12 +36,16 @@ class Table:
         warn(f"{func_name} is not implemented fully yet!")
 
         if self.is_end_of_round():
-            # TODO self.current = self.win_the_trick()
+            winning_card = self.win_the_trick()
+            for quarter, hand in self.hands.items():
+                if hand.has_card(winning_card):
+                    self.current_player = quarter
+
             self.round = 1
             self.starting_suit = None
             self.in_play = []
 
-        playing_hand = self.hands[self.current]  # the hand who are coming
+        playing_hand = self.hands[self.current_player]  # the hand who are coming
         card = playing_hand[card_index]
 
         if self.starting_suit is None:
@@ -51,7 +55,7 @@ class Table:
 
         card.play()
 
-        self.current = self.NEXT[self.current]
+        self.current_player = self.NEXT[self.current_player]
         self.in_play.append(card)
 
         self.round += 1
@@ -59,10 +63,14 @@ class Table:
     def is_end_of_round(self) -> bool:
         return self.round == 4
 
-    def win_the_trick(self) -> str:
-        # TODO
-        func_name = inspect.stack()[0][3]  # the name of this function
-        raise NotImplementedError(f"{func_name} is not implemented yet!")
+    def win_the_trick(self) -> Card:
+        biggest = self.in_play[0]
+
+        for card in self.in_play[1:]:
+            if card.is_trick(biggest, self.starting_suit, self.trump):
+                biggest = card
+
+        return biggest
 
     def is_valid_play(self, card: Card) -> None:
         """
@@ -76,7 +84,7 @@ class Table:
         -------
             Nothing
         """
-        playing_hand = self.hands[self.current]
+        playing_hand = self.hands[self.current_player]
 
         if self.round != 1:  # not the first round
             if (
@@ -84,11 +92,11 @@ class Table:
                 and card.get_suit() != self.starting_suit
             ):
                 raise Exception(
-                    f"{self.current} has {self.starting_suit} suit, but the card is {card.get_suit()}"
+                    f"{self.current_player} has {self.starting_suit} suit, but the card is {card.get_suit()}"
                 )
 
         if not playing_hand.has_card(card):
-            raise Exception(f"{self.current} has no card {card}")
+            raise Exception(f"{self.current_player} has no card {card}")
 
     def play_card(self, card: Card) -> None:
         # TODO
@@ -103,7 +111,7 @@ class Table:
         """
 
         self.dealer = dealer
-        self.current = dealer
+        self.current_player = dealer
 
         for key in self.hands:
             cards: Hand = self.hands[key]

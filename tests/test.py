@@ -63,12 +63,12 @@ class TestTable(unittest.TestCase):
         }
 
         table = Table(hands=hands_input, dealer="S")
-        self.assertEqual(table.current, "S", "Dealers are not equal!")
+        self.assertEqual(table.current_player, "S", "Dealers are not equal!")
 
         table.play_card_index(0)
 
         self.assertEqual(
-            table.current,
+            table.current_player,
             "W",
             "After card playing, the next card player is not correct",
         )

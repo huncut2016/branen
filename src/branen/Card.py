@@ -1,5 +1,6 @@
 import inspect
 from functools import total_ordering
+from __future__ import annotations
 
 
 @total_ordering
@@ -16,7 +17,7 @@ class Card:
         self.suit = suit
         self.value = value
 
-    def set(self, suit: str, value: str):
+    def set(self, suit: str, value: str) -> Card:
         self.suit = suit
         self.value = value
 
@@ -29,7 +30,7 @@ class Card:
         self.set_is_played(False)
         self.set_played_turn(0)
 
-    def play(self):
+    def play(self) -> None:
         if self.is_played:
             Exception("This card was played!")
 
@@ -41,7 +42,7 @@ class Card:
     def get_is_played(self) -> bool:
         return self.is_played
 
-    def set_is_played(self, p):
+    def set_is_played(self, p) -> None:
         self.is_played = p
 
     def get_value(self) -> str:
@@ -86,6 +87,10 @@ class Card:
         if ssu == osu and sval < oval:
             return True
         return False
+
+    def is_trick(self, other: Card, starting_suit: str, trump: str) -> bool:
+        func_name = inspect.stack()[0][3]  # the name of this function
+        raise NotImplementedError(f"{func_name} is not implemented yet!")
 
     def __str__(self) -> str:
         return f"{self.suit}{self.value}"
