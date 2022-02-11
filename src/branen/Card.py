@@ -89,8 +89,40 @@ class Card:
         return False
 
     def is_trick(self, other: Card, starting_suit: str, trump: str) -> bool:
-        func_name = inspect.stack()[0][3]  # the name of this function
-        raise NotImplementedError(f"{func_name} is not implemented yet!")
+
+        # if one of them is a trump
+
+        if self.get_suit == trump and other.get_suit == trump:
+            return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
+
+        if self.get_suit == trump:
+            return True
+
+        if other.get_suit == trump:
+            return True
+
+        # if one of them is from the startin suit
+
+        if self.get_suit == starting_suit and other.get_suit == starting_suit:
+            return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
+
+        if self.get_suit == starting_suit:
+            return True
+
+        if other.get_suit == starting_suit:
+            return True
+
+        return False
+
+        # func_name = inspect.stack()[0][3]  # the name of this function
+        # raise NotImplementedError(f"{func_name} is not implemented yet!")
+
+    def is_same(self, other: Card):
+        if self.get_suit() != other.get_suit():
+            return False
+        if self.get_value() != other.get_value():
+            return False
+        return True
 
     def __str__(self) -> str:
         return f"{self.suit}{self.value}"

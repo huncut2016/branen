@@ -61,6 +61,16 @@ class Hand:
 
         return counter
 
+    def play_card(self, card):
+        for i in range(len(self.hand)):
+            if self.hand[i].is_same(card):
+                self.hand[i].play()
+
+    def get_card_index(self, card):
+        for i in range(len(self.hand)):
+            if self.hand[i].is_same(card):
+                return i
+
     def __getitem__(self, item: int) -> Card:
         return self.hand[item]
 

@@ -10,7 +10,11 @@ class Table:
     NEXT = {"N": "E", "E": "S", "S": "W", "W": "N"}
 
     def __init__(
-        self, hands: Dict[str, Hand] = None, dealer: str = "N", trump: str = None
+        self,
+        hands: Dict[str, Hand] = None,
+        dealer: str = "N",
+        trump: str = None,
+        curRound: int = 1,
     ):
         if hands is None:
             raise Exception("Hands are empty, you need to set some cards!")
@@ -19,7 +23,7 @@ class Table:
         self.dealer = dealer
         self.current_player = dealer
         self.starting_suit: str = None
-        self.round = 1
+        self.round = curRound
         self.in_play: List[Card] = []
         self.trump = trump
 
@@ -36,6 +40,8 @@ class Table:
         warn(f"{func_name} is not implemented fully yet!")
 
         if self.is_end_of_round():
+            self.end_the_round()
+            """
             winning_card = self.win_the_trick()
             for quarter, hand in self.hands.items():
                 if hand.has_card(winning_card):
@@ -44,7 +50,9 @@ class Table:
             self.round = 1
             self.starting_suit = None
             self.in_play = []
+            """
 
+        # ez így biztos, jó, hogy lemásolt elemeken hajtunk végre dolgokat?
         playing_hand = self.hands[self.current_player]  # the hand who are coming
         card = playing_hand[card_index]
 
@@ -62,6 +70,16 @@ class Table:
 
     def is_end_of_round(self) -> bool:
         return self.round == 4
+
+    def end_the_round(self) -> None:
+        winning_card = self.win_the_trick()
+        for quarter, hand in self.hands.items():
+            if hand.has_card(winning_card):
+                self.current_player = quarter
+
+        self.round = 1
+        self.starting_suit = None
+        self.in_play = []
 
     def win_the_trick(self) -> Card:
         biggest = self.in_play[0]
@@ -99,6 +117,14 @@ class Table:
             raise Exception(f"{self.current_player} has no card {card}")
 
     def play_card(self, card: Card) -> None:
+
+        if self.hands[self.current_player].has_card(card) == False:
+            raise Exception(
+                f"Current hand: {self.current_player} has not this card: {card.get_suit()}{card.get_value()}!"
+            )
+
+        self.play_card_index(self.hands[self.current_player].get_card_index(card))
+
         # TODO
         func_name = inspect.stack()[0][3]  # the name of this function
         raise NotImplementedError(f"{func_name} is not implemented yet!")
