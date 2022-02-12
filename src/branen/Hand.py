@@ -66,10 +66,11 @@ class Hand:
             if self.hand[i].is_same(card):
                 self.hand[i].play()
 
-    def get_card_index(self, card):
+    def get_card_index(self, card: Card) -> int:
         for i in range(len(self.hand)):
             if self.hand[i].is_same(card):
                 return i
+        raise Exception(f"{card} has not been found in {self}")
 
     def __getitem__(self, item: int) -> Card:
         return self.hand[item]
@@ -81,7 +82,7 @@ class Hand:
         return self.__copy__()
 
     def __str__(self):
-        return " ".join(self.hand)
+        return " ".join(str(card) for card in self.hand)
 
     def __repr__(self):
         return self.__str__()

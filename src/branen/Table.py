@@ -1,5 +1,5 @@
 import inspect
-from typing import Dict, List
+from typing import Dict, List, Optional
 from warnings import warn
 
 from .Card import Card
@@ -22,7 +22,7 @@ class Table:
         self.hands = hands
         self.dealer = dealer
         self.current_player = dealer
-        self.starting_suit: str = None
+        self.starting_suit: Optional[str] = None
         self.round = curRound
         self.in_play: List[Card] = []
         self.trump = trump
@@ -36,21 +36,9 @@ class Table:
         card_index: :class: `int`
             The index of the card, that you want to play.
         """
-        func_name = inspect.stack()[0][3]  # the name of this function
-        warn(f"{func_name} is not implemented fully yet!")
 
         if self.is_end_of_round():
             self.end_the_round()
-            """
-            winning_card = self.win_the_trick()
-            for quarter, hand in self.hands.items():
-                if hand.has_card(winning_card):
-                    self.current_player = quarter
-
-            self.round = 1
-            self.starting_suit = None
-            self.in_play = []
-            """
 
         # ez így biztos, jó, hogy lemásolt elemeken hajtunk végre dolgokat?
         playing_hand = self.hands[self.current_player]  # the hand who are coming
@@ -82,6 +70,9 @@ class Table:
         self.in_play = []
 
     def win_the_trick(self) -> Card:
+        if self.starting_suit is None:
+            raise Exception("Starting suit is None")
+
         biggest = self.in_play[0]
 
         for card in self.in_play[1:]:
@@ -102,6 +93,9 @@ class Table:
         -------
             Nothing
         """
+        if self.starting_suit is None:
+            raise Exception("Starting suit is None!")
+
         playing_hand = self.hands[self.current_player]
 
         if self.round != 1:  # not the first round

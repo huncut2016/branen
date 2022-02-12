@@ -1,6 +1,7 @@
+from __future__ import annotations
 import inspect
 from functools import total_ordering
-from __future__ import annotations
+from typing import Optional
 
 
 @total_ordering
@@ -88,28 +89,32 @@ class Card:
             return True
         return False
 
-    def is_trick(self, other: Card, starting_suit: str, trump: str) -> bool:
+    def is_trick(
+        self, other: Card, starting_suit: str, trump: Optional[str] = None
+    ) -> bool:
+        """
+        Returns if the card tricks the other.
+        """
+        # if both of them is a trump
 
-        # if one of them is a trump
-
-        if self.get_suit == trump and other.get_suit == trump:
+        if self.get_suit() == trump and other.get_suit() == trump:
             return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
 
-        if self.get_suit == trump:
+        if self.get_suit() == trump:
             return True
 
-        if other.get_suit == trump:
+        if other.get_suit() == trump:
             return True
 
-        # if one of them is from the startin suit
+        # if btoth of them is from the starting suit
 
-        if self.get_suit == starting_suit and other.get_suit == starting_suit:
+        if self.get_suit() == starting_suit and other.get_suit() == starting_suit:
             return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
 
-        if self.get_suit == starting_suit:
+        if self.get_suit() == starting_suit:
             return True
 
-        if other.get_suit == starting_suit:
+        if other.get_suit() == starting_suit:
             return True
 
         return False
