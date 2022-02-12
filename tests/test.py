@@ -31,9 +31,7 @@ class TestCard(unittest.TestCase):
         cs = []
 
         for i in cards:
-            c = Card()
-            c.set_suit(i[0])
-            c.set_value(i[1])
+            c = Card(i[0], i[1])
 
             cs.append(c)
 
@@ -53,7 +51,9 @@ class TestTable(unittest.TestCase):
             *[str(i) for i in range(2, 10)],
         ]
 
-        hands = [Card().set(suit, value) for suit in suits for value in values]
+        hands = [
+            Card(suit, value) for suit in suits for value in values
+        ]  # creating random hands
         shuffle(hands)
         hands_input = {
             "E": Hand(hands[:13]),
@@ -75,8 +75,19 @@ class TestTable(unittest.TestCase):
         self.assertEqual(
             table.get_hands()["S"][0].get_is_played(),
             True,
-            "After playing, card wont bacome passive",
+            "After playing, card won't bacome passive",
         )
+
+        p = 0
+        for index, val in enumerate(table.get_hands()["W"]):
+            if val.get_suit() != table.in_play[0].get_suit():
+                p = index
+                break
+
+        def test_wrong_play(i, table):
+            return lambda: table.play_card_index(i)
+
+        self.assertRaises(Exception, test_wrong_play(p, table))
 
 
 #         self.assertEqual ()

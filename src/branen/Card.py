@@ -43,7 +43,7 @@ class Card:
     def get_is_played(self) -> bool:
         return self.is_played
 
-    def set_is_played(self, p) -> None:
+    def set_is_played(self, p: bool) -> None:
         self.is_played = p
 
     def get_value(self) -> str:
@@ -71,11 +71,12 @@ class Card:
 
         self.suit = suit.upper()
 
-    def get_card(self):
-        func_name = inspect.stack()[0][3]  # the name of this function
-        raise NotImplementedError(f"{func_name} is not implemented yet!")
+    def get_card(self) -> Card:
+        return self
+        # func_name = inspect.stack()[0][3]  # the name of this function
+        # raise NotImplementedError(f"{func_name} is not implemented yet!")
 
-    def __lt__(self, other) -> bool:
+    def __lt__(self, other: Card) -> bool:
 
         oval = self.VALUE_MAP[other.get_value()]
         osu = self.SUIT_MAP[other.get_suit()]
@@ -95,7 +96,7 @@ class Card:
         """
         Returns if the card tricks the other.
         """
-        # if both of them is a trump
+        # if both of them are a trump
 
         if self.get_suit() == trump and other.get_suit() == trump:
             return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
@@ -106,7 +107,7 @@ class Card:
         if other.get_suit() == trump:
             return True
 
-        # if btoth of them is from the starting suit
+        # if btoth of them are from the starting suit
 
         if self.get_suit() == starting_suit and other.get_suit() == starting_suit:
             return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
@@ -119,10 +120,7 @@ class Card:
 
         return False
 
-        # func_name = inspect.stack()[0][3]  # the name of this function
-        # raise NotImplementedError(f"{func_name} is not implemented yet!")
-
-    def is_same(self, other: Card):
+    def is_same(self, other: Card) -> bool:
         if self.get_suit() != other.get_suit():
             return False
         if self.get_value() != other.get_value():
@@ -134,3 +132,6 @@ class Card:
 
     def __repr__(self):
         return self.__str__()
+
+    def __eq__(self, other: Card) -> bool:
+        return self.is_same(other)

@@ -40,7 +40,6 @@ class Table:
         if self.is_end_of_round():
             self.end_the_round()
 
-        # ez így biztos, jó, hogy lemásolt elemeken hajtunk végre dolgokat?
         playing_hand = self.hands[self.current_player]  # the hand who are coming
         card = playing_hand[card_index]
 
@@ -112,18 +111,12 @@ class Table:
 
     def play_card(self, card: Card) -> None:
 
-        if self.hands[self.current_player].has_card(card) == False:
+        if not self.hands[self.current_player].has_card(card):
             raise Exception(
-                f"Current hand: {self.current_player} has not this card: {card.get_suit()}{card.get_value()}!"
+                f"Current hand: {self.current_player} has not this card: {card}!"
             )
 
         self.play_card_index(self.hands[self.current_player].get_card_index(card))
-
-        # TODO
-        func_name = inspect.stack()[0][3]  # the name of this function
-        raise NotImplementedError(f"{func_name} is not implemented yet!")
-        # if self.hands is None:
-        #     raise Exception("Hands are empty, you need to set some cards!")
 
     def reset(self, dealer: str = "N") -> None:
         """
