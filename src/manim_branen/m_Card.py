@@ -1,11 +1,34 @@
 import os
 
-from manim import SVGMobject
+from manim import SVGMobject, VGroup, Text
+from manim.utils import color
 
 from src.branen.Card import Card
 
+TABLE_TYPE = ["CARD", "DIAGRAM"]
+UNICODE_MAP = {
+    "S": "♠",
+    "H": "♥",
+    "D": "♦",
+    "C": "♣",
+}
+SUIT_COLOR_MAP = {
+    "dark": {
+        "S": color.WHITE,
+        "H": color.RED,
+        "D": color.RED,
+        "C": color.WHITE,
+    },
+    "light": {
+        "S": color.BLACK,
+        "H": color.RED,
+        "D": color.RED,
+        "C": color.BLACK,
+    },
+}
 
-class m_Card(SVGMobject):
+
+class m_Card(VGroup):
     """branen is one of the basic building blocks of branen.
     This object represents the French card in the bridge, not the bidding card!
 
@@ -23,19 +46,47 @@ class m_Card(SVGMobject):
     """
 
     def __init__(
-        self, card: Card = None, suit: str = None, value: str = None, **kwargs
+        self,
+        suit: str = None,
+        value: str = None,
+        card: Card = None,
+        card_type: str = TABLE_TYPE[0],
+        **kwargs,
     ):
-        if Card is not None:
+        if card is not None:
             self.card = card
         else:
+            if suit is None:
+                raise ValueError("Suit can not be None")
+            if value is None:
+                raise ValueError("Value can not be None")
+
             self.card = Card(suit, value)
 
+        if not card_type in TABLE_TYPE:
+            raise ValueError(f"Card type must be {', or'.join(TABLE_TYPE)}")
+
+        if card_type == "CARD":
+            super().__init__(self.card_view(), **kwargs)
+        else:
+            super().__init__(self.diagram_view(), **kwargs)
+
+    def diagram_view(self):
+        suit = UNICODE_MAP[self.card.get_suit()]
+        value = self.card.value
+        card = Text(f"{suit}{10 if value == 'T' else value}")
+        color_of_suit = SUIT_COLOR_MAP["dark"][self.card.get_suit()]
+
+        card[0].set_color(color.Color(color_of_suit))
+        return card
+
+    def card_view(self):
         file_path = os.path.join(
             os.path.dirname(__file__),
             "..",
             "media",
             "cards",
-            f"{self.suit}{self.value}.svg",
+            f"{self.card.suit}{self.card.value}.svg",
         )
 
-        super().__init__(file_name=file_path, **kwargs)
+        return SVGMobject(file_path)

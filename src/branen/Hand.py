@@ -75,6 +75,9 @@ class Hand:
                 return i
         raise Exception(f"{card} has not been found in {self}")
 
+    def sort(self, reverse: bool = False):
+        self.hand.sort(reverse=reverse)
+
     def __getitem__(self, item: int) -> Card:
         return self.hand[item]
 
@@ -89,3 +92,6 @@ class Hand:
 
     def __repr__(self):
         return self.__str__()
+
+    def __iter__(self):
+        return iter(self.hand)
