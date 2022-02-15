@@ -3,18 +3,26 @@ from src.branen.Card import Card
 from .m_Card import m_Card
 from manim import VGroup
 from manim.constants import DOWN, LEFT
-from typing import List
+from typing import List, Union
 
 TABLE_TYPE = ["CARD", "DIAGRAM"]
 
 
 class m_Hand(VGroup):
     def __init__(
-        self, hand: List[Card] = None, hand_type: str = TABLE_TYPE[1], **kwargs
+        self,
+        hand: Union[List[Card], Hand] = None,
+        hand_type: str = TABLE_TYPE[1],
+        **kwargs
     ):
         if hand is None:
             raise ValueError("Hand can not be None")
-        self.hand = Hand(hand)
+
+        if isinstance(hand, Hand):
+            self.hand = hand
+        else:
+            self.hand = Hand(hand)
+
         self.hand.sort(True)
 
         SUITS = ["S", "H", "D", "C"]

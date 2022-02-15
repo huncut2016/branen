@@ -1,8 +1,9 @@
 from src.branen.Table import Table
 from src.branen.Hand import Hand
+from .m_Hand import m_Hand
 
 from warnings import warn
-from manim import VGroup
+from manim import VGroup, Square
 from manim.constants import UP, DOWN, RIGHT, LEFT
 from typing import Dict
 import inspect
@@ -19,7 +20,7 @@ class m_Table(VGroup):
         hands: Dict[str, Hand] = None,
         dealer: str = "N",
         trump: str = None,
-        table_type: str = TABLE_TYPE[0],
+        table_type: str = TABLE_TYPE[1],
         **kwargs,
     ):
         table_type = table_type.upper()
@@ -30,12 +31,33 @@ class m_Table(VGroup):
 
         self.table = Table(hands, dealer, trump)
 
-        super().__init__(**kwargs)
+        vmobjects = VGroup()
+
+        if table_type == "CARD":
+            vmobjects = self.card_view()
+        else:
+            vmobjects = self.diagram_view()
+
+        super().__init__(vmobjects, **kwargs)
 
     def diagram_view(self):
-        # TODO create table
-        pass
+        table = self.table
+        sq = Square().center()
+        gr = VGroup(sq)
+
+        for quarter, hand in table.get_hands().items():
+            h = m_Hand(hand).next_to(sq, quarter_to_dir[quarter] * 4)
+            gr.add(h)
+
+        return gr
 
     def card_view(self):
         func_name = inspect.stack()[0][3]  # the name of this function
         raise NotImplementedError(f"{func_name} is not implemented yet!")
+
+    def get_center_table(self) -> Square:
+        t = self.submobjects[0][0]
+        if not isinstance(t, Square):
+            raise Exception("Table is not initialized yet!")
+
+        return t

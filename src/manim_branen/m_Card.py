@@ -1,8 +1,9 @@
 import os
 
-from manim import SVGMobject, VGroup, Text
+from manim import SVGMobject, VGroup, Text, VMobject
 from manim.utils import color
 
+from statistics import mean
 from src.branen.Card import Card
 
 TABLE_TYPE = ["CARD", "DIAGRAM"]
@@ -74,7 +75,7 @@ class m_Card(VGroup):
     def diagram_view(self):
         suit = UNICODE_MAP[self.card.get_suit()]
         value = self.card.value
-        card = Text(f"{suit}{10 if value == 'T' else value}")
+        card = Text(f"{suit}{10 if value == 'T' else value}").scale(0.5)
         color_of_suit = SUIT_COLOR_MAP["dark"][self.card.get_suit()]
 
         card[0].set_color(color.Color(color_of_suit))
@@ -90,3 +91,8 @@ class m_Card(VGroup):
         )
 
         return SVGMobject(file_path)
+
+    def play(self, table: VMobject, dir):
+        self.card.play()
+        pos = (table.get_center() + table.get_edge_center(dir)) / 2
+        return self.animate.move_to(pos)
