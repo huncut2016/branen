@@ -3,7 +3,6 @@ import os
 from manim import SVGMobject, VGroup, Text, VMobject
 from manim.utils import color
 
-from statistics import mean
 from branen.Card import Card
 
 TABLE_TYPE = ["CARD", "DIAGRAM"]
@@ -66,8 +65,6 @@ class m_Card(VGroup):
 
         if not card_type in TABLE_TYPE:
             raise ValueError(f"Card type must be {', or'.join(TABLE_TYPE)}")
-
-        self.card_type = card_type
 
         if card_type == "CARD":
             super().__init__(self.card_view(), **kwargs)

@@ -62,3 +62,24 @@ class Test_Table(Scene):
 
         self.play(Create(t))
         self.wait()
+
+
+class Table_play_test(Scene):
+    def construct(self):
+        hands = [
+            Card(suit, value) for suit in suits for value in values
+        ]  # creating random hands
+        shuffle(hands)
+
+        hands_input = {
+            "E": Hand(hands[:13]),
+            "W": Hand(hands[13:26]),
+            "N": Hand(hands[26:39]),
+            "S": Hand(hands[39:]),
+        }
+
+        t = m_Table(hands_input)
+        t.play_card(hands[27])
+
+        # self.play(Create(t))
+        # self.wait()

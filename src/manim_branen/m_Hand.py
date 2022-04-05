@@ -43,6 +43,13 @@ class m_Hand(VGroup):
         SUITS = ["S", "H", "D", "C"]
 
         vmobjects = VGroup()
+        ## TODO
+        # self.hand = {
+        #     "S":
+        #     "H":
+        #     "D":
+        #     "C":
+        # }
 
         for suit in SUITS:
             suit_symbol = Text(f"{UNICODE_MAP[suit]}").scale(0.5)
@@ -64,3 +71,6 @@ class m_Hand(VGroup):
         vmobjects.arrange(DOWN, aligned_edge=LEFT)
 
         super().__init__(vmobjects, **kwargs)
+
+    def __iter__(self):
+        return iter(self.submobjects)
