@@ -2,6 +2,7 @@ import os
 
 from manim import SVGMobject, VGroup, Text, VMobject
 from manim.utils import color
+from manim import Transform
 
 from branen.Card import Card
 
@@ -66,6 +67,8 @@ class m_Card(VGroup):
         if not card_type in TABLE_TYPE:
             raise ValueError(f"Card type must be {', or'.join(TABLE_TYPE)}")
 
+        self.card_type = card_type
+
         if card_type == "CARD":
             super().__init__(self.card_view(), **kwargs)
         else:
@@ -100,7 +103,20 @@ class m_Card(VGroup):
 
         return SVGMobject(file_path)
 
+    def get_card(self) -> Card:
+        return self.card
+
     def play(self, table: VMobject, dir):
         self.card.play()
+        new_card = self.fullCard()
         pos = (table.get_center() + table.get_edge_center(dir)) / 2
-        return self.animate.move_to(pos)
+
+        ## TODO test is it working right
+        return Transform(self, new_card.move_to(pos))
+        # return self.animate.move_to(pos)
+
+    def __str__(self) -> str:
+        return self.card.__str__()
+
+    def __repr__(self):
+        return self.card.__repr__()

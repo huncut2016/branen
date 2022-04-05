@@ -23,6 +23,7 @@ class Hand:
             Exception("Length of the hand must be 13!")
 
         self.hand = hand
+        self.sort()
 
     def has_suit(self, suit: str) -> bool:
         """

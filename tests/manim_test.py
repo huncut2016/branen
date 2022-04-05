@@ -79,7 +79,8 @@ class Table_play_test(Scene):
         }
 
         t = m_Table(hands_input)
-        t.play_card(hands[27])
 
-        # self.play(Create(t))
-        # self.wait()
+        self.play(FadeIn(t))
+        self.play(t.play_card(hands[27]))
+        self.play(t.play_card(hands[0]))
+        self.wait()

@@ -7,23 +7,24 @@ from warnings import warn
 from manim import VGroup, Square, Animation
 from manim.constants import UP, DOWN, RIGHT, LEFT
 from manim.utils import color
-from typing import Dict
+from typing import Dict, Any, List
+from numpy import ndarray
 import inspect
 
 from manim_branen.m_Card import m_Card
 
 
-TABLE_TYPE = ["CARD", "DIAGRAM"]
-quarter_to_dir = {"N": UP, "S": DOWN, "E": RIGHT, "W": LEFT}
+TABLE_TYPE: List[str] = ["CARD", "DIAGRAM"]
+quarter_to_dir: Dict[str, ndarray] = {"N": UP, "S": DOWN, "E": RIGHT, "W": LEFT}
 
-UNICODE_MAP = {
+UNICODE_MAP: Dict[str, str] = {
     "S": "♠",
     "H": "♥",
     "D": "♦",
     "C": "♣",
 }
 
-SUIT_COLOR_MAP = {
+SUIT_COLOR_MAP: Dict[str, Dict[str, str]] = {
     "dark": {
         "S": color.WHITE,
         "H": color.RED,
@@ -63,11 +64,13 @@ class m_Table(VGroup):
         else:
             self.hands = self.diagram_view()[1:]
 
-        super().__init__(self.hands, **kwargs)
+        super().__init__(self.sq, self.hands, **kwargs)
 
     def diagram_view(self) -> VGroup:
         table = self.table
         sq = Square().center()
+        ## TODO (horrible)
+        self.sq = sq
         gr = VGroup(sq)
 
         for quarter, hand in table.get_hands().items():
@@ -87,11 +90,16 @@ class m_Table(VGroup):
 
         return t
 
-    def play_card(self, card: Card) -> Animation:
+    def play_card(self, card: Card):
         ## TODO
         func_name = inspect.stack()[0][3]  # the name of this function
-        raise NotImplementedError(f"{func_name} is not implemented yet!")
+        warn(f"Function {func_name} is not implemented fully yet!")
+        # raise NotImplementedError(f"{func_name} is not implemented yet!")
+        player = self.table.get_current_player()
         self.table.play_card(card)
+        dir = quarter_to_dir[player]
 
         for hand in self.hands:
-            print(hand)
+            for c in hand:
+                if c.get_card() == card:
+                    return c.play(self.sq, dir)

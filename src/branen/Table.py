@@ -135,6 +135,12 @@ class Table:
     def set_dealer(self, dealer: str = "N") -> None:
         self.dealer = dealer
 
+    def get_current_player(self) -> str:
+        return self.current_player
+
+    def get_dealer(self) -> str:
+        return self.dealer
+
     def get_hands(self) -> Dict[str, Hand]:
         return self.hands.copy()
 
