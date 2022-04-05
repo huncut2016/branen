@@ -1,10 +1,16 @@
 from manim import *
 from random import shuffle
-from src.manim_branen.m_Card import m_Card
-from src.branen.Card import Card
-from src.branen.Hand import Hand
-from src.manim_branen.m_Hand import m_Hand
-from src.manim_branen.m_Table import m_Table
+
+import sys
+
+sys.path.append("../src")
+
+from manim_branen.m_Card import m_Card
+from branen.Card import Card
+from branen.Hand import Hand
+from manim_branen.m_Hand import m_Hand
+from manim_branen.m_Table import m_Table
+from typing import List
 
 suits: List[str] = ["S", "H", "D", "C"]
 values: List[str] = [
@@ -43,12 +49,13 @@ class Test_Table(Scene):
         hands = [
             Card(suit, value) for suit in suits for value in values
         ]  # creating random hands
+        shuffle(hands)
 
         hands_input = {
             "E": Hand(hands[:13]),
-            "W": Hand(hands[14:26]),
-            "N": Hand(hands[27:39]),
-            "S": Hand(hands[38:]),
+            "W": Hand(hands[13:26]),
+            "N": Hand(hands[26:39]),
+            "S": Hand(hands[39:]),
         }
 
         t = m_Table(hands_input)

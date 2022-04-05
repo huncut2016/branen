@@ -4,7 +4,7 @@ from manim import SVGMobject, VGroup, Text, VMobject
 from manim.utils import color
 
 from statistics import mean
-from src.branen.Card import Card
+from branen.Card import Card
 
 TABLE_TYPE = ["CARD", "DIAGRAM"]
 UNICODE_MAP = {
@@ -67,12 +67,14 @@ class m_Card(VGroup):
         if not card_type in TABLE_TYPE:
             raise ValueError(f"Card type must be {', or'.join(TABLE_TYPE)}")
 
+        self.card_type = card_type
+
         if card_type == "CARD":
             super().__init__(self.card_view(), **kwargs)
         else:
             super().__init__(self.diagram_view(), **kwargs)
 
-    def diagram_view(self):
+    def fullCard(self):
         suit = UNICODE_MAP[self.card.get_suit()]
         value = self.card.value
         card = Text(f"{suit}{10 if value == 'T' else value}").scale(0.5)
@@ -80,6 +82,15 @@ class m_Card(VGroup):
 
         card[0].set_color(color.Color(color_of_suit))
         return card
+
+    def cardSymbol(self):
+        value = self.card.value
+        card = Text(f"{10 if value == 'T' else value}").scale(0.5)
+
+        return card
+
+    def diagram_view(self):
+        return self.cardSymbol() if self.card_type == TABLE_TYPE[1] else self.fullCard()
 
     def card_view(self):
         file_path = os.path.join(

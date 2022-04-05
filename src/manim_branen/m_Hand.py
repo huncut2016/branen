@@ -1,11 +1,26 @@
-from src.branen.Hand import Hand
-from src.branen.Card import Card
-from .m_Card import m_Card
-from manim import VGroup
+from branen.Hand import Hand
+from branen.Card import Card
+from .m_Card import UNICODE_MAP, m_Card
+from manim import VGroup, Text
+from manim.utils import color
 from manim.constants import DOWN, LEFT
 from typing import List, Union
 
 TABLE_TYPE = ["CARD", "DIAGRAM"]
+SUIT_COLOR_MAP = {
+    "dark": {
+        "S": color.WHITE,
+        "H": color.RED,
+        "D": color.RED,
+        "C": color.WHITE,
+    },
+    "light": {
+        "S": color.BLACK,
+        "H": color.RED,
+        "D": color.RED,
+        "C": color.BLACK,
+    },
+}
 
 
 class m_Hand(VGroup):
@@ -13,7 +28,7 @@ class m_Hand(VGroup):
         self,
         hand: Union[List[Card], Hand] = None,
         hand_type: str = TABLE_TYPE[1],
-        **kwargs
+        **kwargs,
     ):
         if hand is None:
             raise ValueError("Hand can not be None")
@@ -30,15 +45,21 @@ class m_Hand(VGroup):
         vmobjects = VGroup()
 
         for suit in SUITS:
-            HAND = VGroup(
+            suit_symbol = Text(f"{UNICODE_MAP[suit]}").scale(0.5)
+            color_of_suit = SUIT_COLOR_MAP["dark"][suit]
+
+            suit_symbol.set_color(color.Color(color_of_suit))
+
+            row = VGroup(
+                suit_symbol,
                 *[
                     m_Card(card=card, card_type=hand_type)
                     for card in hand
                     if card.get_suit() == suit
-                ]
+                ],
             )
-            HAND.arrange()
-            vmobjects.add(HAND)
+            row.arrange()
+            vmobjects.add(row)
 
         vmobjects.arrange(DOWN, aligned_edge=LEFT)
 

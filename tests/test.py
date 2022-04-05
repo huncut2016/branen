@@ -2,9 +2,13 @@ import unittest
 from random import shuffle
 from typing import List
 
-from src.branen.Card import Card
-from src.branen.Table import Table
-from src.branen.Hand import Hand
+import sys
+
+sys.path.append("../src")
+
+from branen.Card import Card
+from branen.Table import Table
+from branen.Hand import Hand
 
 
 # from manim_branen.m_Card import m_Card

@@ -1,4 +1,4 @@
-from src.branen.Card import Card
+from branen.Card import Card
 from typing import List
 
 

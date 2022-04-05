@@ -1,10 +1,11 @@
-from src.branen.Table import Table
-from src.branen.Hand import Hand
+from branen.Table import Table
+from branen.Hand import Hand
 from .m_Hand import m_Hand
 
 from warnings import warn
 from manim import VGroup, Square
 from manim.constants import UP, DOWN, RIGHT, LEFT
+from manim.utils import color
 from typing import Dict
 import inspect
 
@@ -12,6 +13,28 @@ warn("This module is not implemented yet!")
 
 TABLE_TYPE = ["CARD", "DIAGRAM"]
 quarter_to_dir = {"N": UP, "S": DOWN, "E": RIGHT, "W": LEFT}
+
+UNICODE_MAP = {
+    "S": "♠",
+    "H": "♥",
+    "D": "♦",
+    "C": "♣",
+}
+
+SUIT_COLOR_MAP = {
+    "dark": {
+        "S": color.WHITE,
+        "H": color.RED,
+        "D": color.RED,
+        "C": color.WHITE,
+    },
+    "light": {
+        "S": color.BLACK,
+        "H": color.RED,
+        "D": color.RED,
+        "C": color.BLACK,
+    },
+}
 
 
 class m_Table(VGroup):
