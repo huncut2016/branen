@@ -3,8 +3,11 @@ from random import shuffle
 from typing import List
 
 import sys
+from pathlib import Path
 
-sys.path.append("../src")
+dir_path = Path(__file__).absolute().parent.parent / "src"
+sys.path.append(str(dir_path))
+
 
 from branen.Card import Card
 from branen.Table import Table
