@@ -8,6 +8,7 @@ TEST_DATAS: Path = Path(__file__).absolute().parent / "test_datas"
 
 import unittest
 from branen_tools.lin_parser import LinParser
+from branen.Table import Table
 
 
 class TestLinParser(unittest.TestCase):
@@ -18,17 +19,19 @@ class TestLinParser(unittest.TestCase):
 
         # Check types
         self.assertIsInstance(board, int)
-        self.assertIsInstance(deal, dict)
+        self.assertIsInstance(deal, Table)
         self.assertIsInstance(vulnerable, str)
         self.assertIsInstance(play, list)
 
         # Check all hands are valid
         self.assertEqual(
-            len(deal), 4, f"In a deal N, S, E, W must be known! ({deal.keys()})"
+            len(deal.get_hands()),
+            4,
+            f"In a deal N, S, E, W must be known! ({deal.get_hands().keys()})",
         )
         quarters = ["N", "S", "E", "W"]
 
-        for quarter, hand in deal.items():
+        for quarter, hand in deal.get_hands().items():
             self.assertIn(quarter, quarters, f"{quarter} is not in {quarters}")
             self.assertEqual(len(hand), 13)
 

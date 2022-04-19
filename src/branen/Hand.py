@@ -76,6 +76,9 @@ class Hand:
                 return i
         raise Exception(f"{card} has not been found in {self}")
 
+    def __len__(self) -> int:
+        return len(self.hand)
+
     def sort(self, reverse: bool = False):
         self.hand.sort(reverse=reverse)
 

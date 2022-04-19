@@ -1,17 +1,22 @@
+import sys
+from pathlib import Path
+
+dir_path = Path(__file__).absolute().parent.parent / "src"
+sys.path.append(str(dir_path))
+
+
 from manim import *
 from random import shuffle
-
-import sys
-
-sys.path.append("../src")
 
 from manim_branen.m_Card import m_Card
 from branen.Card import Card
 from branen.Hand import Hand
 from manim_branen.m_Hand import m_Hand
 from manim_branen.m_Table import m_Table
+from branen_tools.lin_parser import LinParser
 from typing import List
 
+TEST_DATAS: Path = Path(__file__).absolute().parent / "test_datas"
 suits: List[str] = ["S", "H", "D", "C"]
 values: List[str] = [
     *["A", "K", "Q", "J", "T"],
@@ -66,21 +71,23 @@ class Test_Table(Scene):
 
 class Table_play_test(Scene):
     def construct(self):
-        hands = [
-            Card(suit, value) for suit in suits for value in values
-        ]  # creating random hands
-        shuffle(hands)
+        lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
 
-        hands_input = {
-            "E": Hand(hands[:13]),
-            "W": Hand(hands[13:26]),
-            "N": Hand(hands[26:39]),
-            "S": Hand(hands[39:]),
-        }
+        board, deal, vulnerable, play = lp.get_all()
 
-        t = m_Table(hands_input)
+        # hands = [
+        #     Card(suit, value) for suit in suits for value in values
+        # ]  # creating random hands
+        # shuffle(hands)
+
+        # hands_input = {
+        #     "E": Hand(hands[:13]),
+        #     "W": Hand(hands[13:26]),
+        #     "N": Hand(hands[26:39]),
+        #     "S": Hand(hands[39:]),
+        # }
+
+        t = m_Table(deal)
 
         self.play(FadeIn(t))
-        self.play(t.play_card(hands[27]))
-        self.play(t.play_card(hands[0]))
         self.wait()

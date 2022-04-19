@@ -155,3 +155,9 @@ class Table:
 
     def set_S(self, S: Hand) -> None:
         self.hands["S"] = S
+
+    def __str__(self):
+        return str(self.hands)
+
+    def __repr__(self):
+        return self.__str__()

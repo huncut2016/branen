@@ -7,7 +7,7 @@ from warnings import warn
 from manim import VGroup, Square, Animation
 from manim.constants import UP, DOWN, RIGHT, LEFT
 from manim.utils import color
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 from numpy import ndarray
 import inspect
 
@@ -43,7 +43,7 @@ SUIT_COLOR_MAP: Dict[str, Dict[str, str]] = {
 class m_Table(VGroup):
     def __init__(
         self,
-        hands: Dict[str, Hand] = None,
+        hands: Union[Dict[str, Hand], Table] = None,
         dealer: str = "N",
         trump: str = None,
         table_type: str = TABLE_TYPE[1],
@@ -55,7 +55,10 @@ class m_Table(VGroup):
         if not table_type in TABLE_TYPE:
             raise ValueError(f"Table type must be {', or'.join(TABLE_TYPE)}")
 
-        self.table = Table(hands, dealer, trump)
+        if isinstance(hands, Table):
+            self.table = hands
+        else:
+            self.table = Table(hands, dealer, trump)
 
         self.hands = VGroup()
 

@@ -14,6 +14,8 @@ import re
 from typing import Dict, Optional, List, Tuple
 import textwrap
 from branen.Table import Table
+from branen.Hand import Hand
+from branen.Card import Card
 
 
 def numToDirection(n):
@@ -21,6 +23,8 @@ def numToDirection(n):
 
 
 class LinParser:
+    """LinParser converts a .lin file to a branen data structure."""
+
     def __init__(
         self, linstring: Optional[str] = None, path: Optional[str] = None
     ) -> None:
@@ -47,12 +51,13 @@ class LinParser:
                 self.linstring = file.read()
 
         self.board: int
-        self.deal: Dict[str, List[str]]
+        self.deal: Table
         # TODO vulnerable must be string
         self.vulnerable: str
         self.play: List[str]
 
     def parse(self) -> LinParser:
+        """Parses the .lin to a manageable format."""
         ## Start of the Black Box
 
         linstring = self.linstring
@@ -75,7 +80,8 @@ class LinParser:
                 for j in range(13):
                     if all([rank[j] not in hands[k][i] for k in range(3)]):
                         hands[3][i] = hands[3][i] + rank[j]
-        deal = dealer + ":" + " ".join([".".join(x) for x in hands])
+        # deal = dealer + ":" + " ".join([".".join(x) for x in hands])
+        deal = hands
 
         # Extract auction
         aa = linList[2].split("|")[1::2]
@@ -137,18 +143,37 @@ class LinParser:
         play = [numToDirection(declarerIndex + 1), play]
 
         ## End of the Black Box
+        # print(west)
+        # print(east)
+        # print(north)
+        # print(south)
 
         self.board = int(board)
         self.deal = self.preprocess_deal(deal)
-        # TODO vulnerable: must be a string
         self.vulnerable = vulnerable
         self.play = play
 
         return self
 
-    def preprocess_deal(self, deal: str) -> Dict[str, List[str]]:
+    def preprocess_deal(self, deal: List[List[str]]) -> Table:
         # TODO preprocess wrong deal format
-        raise NotImplementedError("This function is not implemented yet")
+        q = ["S", "W", "N", "E"]
+        suits = ["S", "H", "D", "C"]
+
+        hands: Dict[str, Hand] = {}
+
+        for quarter, cards in enumerate(q):
+            hand = Hand(
+                [
+                    Card(suit=suits[suit], value=v)
+                    for suit in range(4)
+                    for v in deal[quarter][suit]
+                ]
+            )
+
+            hands[q[quarter]] = hand
+
+        return Table(hands)
 
     def get_board(self) -> int:
         if self.board is None:
@@ -156,7 +181,7 @@ class LinParser:
 
         return self.board
 
-    def get_deal(self) -> Dict[str, List[str]]:
+    def get_deal(self) -> Table:
         if self.board is None:
             raise Exception("First call the parse method!")
 
@@ -174,5 +199,5 @@ class LinParser:
 
         return self.play
 
-    def get_all(self) -> Tuple[int, Dict[str, List[str]], str, List[str]]:
+    def get_all(self) -> Tuple[int, Table, str, List[str]]:
         return (self.board, self.deal, self.vulnerable, self.play)
