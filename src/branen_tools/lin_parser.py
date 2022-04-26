@@ -11,7 +11,7 @@ sys.path.append(str(dir_path))
 
 
 import re
-from typing import Dict, Optional, List, Tuple
+from typing import Dict, Optional, List, Tuple, Union
 import textwrap
 from branen.Table import Table
 from branen.Hand import Hand
@@ -54,7 +54,7 @@ class LinParser:
         self.deal: Table
         # TODO vulnerable must be string
         self.vulnerable: str
-        self.play: List[str]
+        self.play: List[Union[Card, str]]
 
     def parse(self) -> LinParser:
         """Parses the .lin to a manageable format."""
@@ -143,20 +143,29 @@ class LinParser:
         play = [numToDirection(declarerIndex + 1), play]
 
         ## End of the Black Box
-        # print(west)
-        # print(east)
-        # print(north)
-        # print(south)
 
         self.board = int(board)
-        self.deal = self.preprocess_deal(deal)
+        self.declarer = declarer
+        self.dealer = dealer
+        self.play = self.preprocess_play(play)
         self.vulnerable = vulnerable
-        self.play = play
+        self.deal = self.preprocess_deal(deal)
 
         return self
 
+    def preprocess_play(self, play: List[str]) -> List[Union[Card, str]]:
+        history = []
+        for c in play[1].split(" "):
+            c = c.strip()
+
+            if len(c) == 1:
+                history.append(c)
+            elif len(c) != 0:  # TODO len 0 is weird
+                history.append(Card(c[0], c[1]))
+
+        return history
+
     def preprocess_deal(self, deal: List[List[str]]) -> Table:
-        # TODO preprocess wrong deal format
         q = ["S", "W", "N", "E"]
         suits = ["S", "H", "D", "C"]
 
@@ -173,7 +182,8 @@ class LinParser:
 
             hands[q[quarter]] = hand
 
-        return Table(hands)
+        # TODO dealer is not declarer
+        return Table(hands, dealer=self.dealer)
 
     def get_board(self) -> int:
         if self.board is None:
@@ -193,11 +203,11 @@ class LinParser:
 
         return self.vulnerable
 
-    def get_play(self) -> List[str]:
+    def get_play(self) -> List[Union[Card, str]]:
         if self.board is None:
             raise Exception("First call the parse method!")
 
         return self.play
 
-    def get_all(self) -> Tuple[int, Table, str, List[str]]:
+    def get_all(self) -> Tuple[int, Table, str, List[Union[Card, str]]]:
         return (self.board, self.deal, self.vulnerable, self.play)

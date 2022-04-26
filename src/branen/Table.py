@@ -1,11 +1,20 @@
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+dir_path = Path(__file__).absolute().parent.parent
+sys.path.append(str(dir_path))
+
+
 import inspect
 from typing import Dict, List, Optional
 from warnings import warn
 
-from .Card import Card
-from .Hand import Hand
+from branen.Card import Card
+from branen.Hand import Hand
 
-
+# TODO dealer is not declarer
 class Table:
     NEXT = {"N": "E", "E": "S", "S": "W", "W": "N"}
 
@@ -13,6 +22,7 @@ class Table:
         self,
         hands: Dict[str, Hand] = None,
         dealer: str = "N",
+        declarer: str = "N",
         trump: str = None,
         curRound: int = 1,
     ):
@@ -21,6 +31,7 @@ class Table:
 
         self.hands = hands
         self.dealer = dealer
+        self.declarer = declarer
         self.current_player = dealer
         self.starting_suit: Optional[str] = None
         self.round = curRound
