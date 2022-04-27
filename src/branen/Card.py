@@ -1,7 +1,7 @@
 from __future__ import annotations
 import inspect
 from functools import total_ordering
-from typing import Optional
+from typing import Optional, Any
 
 
 @total_ordering
@@ -120,12 +120,17 @@ class Card:
 
         return False
 
-    def is_same(self, other: Card) -> bool:
-        if self.get_suit() != other.get_suit():
-            return False
-        if self.get_value() != other.get_value():
-            return False
-        return True
+    def is_same(self, other: Any) -> bool:
+        if isinstance(other, str):
+            return other == f"{self.suit}{self.value}"
+
+        if isinstance(other, Card):
+            return (
+                self.get_suit() == other.get_suit()
+                and self.get_value() == other.get_value()
+            )
+
+        return False
 
     def __str__(self) -> str:
         return f"{self.suit}{self.value}"

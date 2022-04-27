@@ -9,6 +9,9 @@ TEST_DATAS: Path = Path(__file__).absolute().parent / "test_datas"
 import unittest
 from branen_tools.lin_parser import LinParser
 from branen.Table import Table
+from branen.History import History
+from branen.Card import Card
+from typing import Union
 
 
 class TestLinParser(unittest.TestCase):
@@ -21,7 +24,7 @@ class TestLinParser(unittest.TestCase):
         self.assertIsInstance(board, int)
         self.assertIsInstance(deal, Table)
         self.assertIsInstance(vulnerable, str)
-        self.assertIsInstance(play, list)
+        self.assertIsInstance(play, History)
 
         # Check all hands are valid
         self.assertEqual(
@@ -34,6 +37,21 @@ class TestLinParser(unittest.TestCase):
         for quarter, hand in deal.get_hands().items():
             self.assertIn(quarter, quarters, f"{quarter} is not in {quarters}")
             self.assertEqual(len(hand), 13)
+
+    def test_history(self):
+        lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
+        history = lp.get_play()
+
+        string_counter = 0
+
+        for card in history:
+            if isinstance(card, str):
+                ++string_counter
+            self.assertIsInstance(card, (Card, str))
+
+        self.assertLessEqual(
+            string_counter, 1, f"History contains more than 1 claims ({string_counter})"
+        )
 
 
 if __name__ == "__main__":

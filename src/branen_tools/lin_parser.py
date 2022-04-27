@@ -16,6 +16,7 @@ import textwrap
 from branen.Table import Table
 from branen.Hand import Hand
 from branen.Card import Card
+from branen.History import History
 
 
 def numToDirection(n):
@@ -54,7 +55,7 @@ class LinParser:
         self.deal: Table
         # TODO vulnerable must be string
         self.vulnerable: str
-        self.play: List[Union[Card, str]]
+        self.play: History
 
     def parse(self) -> LinParser:
         """Parses the .lin to a manageable format."""
@@ -153,7 +154,7 @@ class LinParser:
 
         return self
 
-    def preprocess_play(self, play: List[str]) -> List[Union[Card, str]]:
+    def preprocess_play(self, play: List[str]) -> History:
         history = []
         for c in play[1].split(" "):
             c = c.strip()
@@ -163,7 +164,7 @@ class LinParser:
             elif len(c) != 0:  # TODO len 0 is weird
                 history.append(Card(c[0], c[1]))
 
-        return history
+        return History(history=history)
 
     def preprocess_deal(self, deal: List[List[str]]) -> Table:
         q = ["S", "W", "N", "E"]
@@ -203,11 +204,11 @@ class LinParser:
 
         return self.vulnerable
 
-    def get_play(self) -> List[Union[Card, str]]:
+    def get_play(self) -> History:
         if self.board is None:
             raise Exception("First call the parse method!")
 
         return self.play
 
-    def get_all(self) -> Tuple[int, Table, str, List[Union[Card, str]]]:
+    def get_all(self) -> Tuple[int, Table, str, History]:
         return (self.board, self.deal, self.vulnerable, self.play)
