@@ -17,7 +17,7 @@ class History:
         self.index = 0
 
     def next(self) -> Union[Card, str]:
-        ++self.index
+        self.index += 1
 
         if self.index >= len(self.history):
             raise StopIteration
@@ -44,3 +44,9 @@ class History:
             if c == card:
                 self.index = i
                 return
+
+    def __str__(self) -> str:
+        return str(self.history)
+
+    def __repr__(self) -> str:
+        return self.__str__()

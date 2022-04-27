@@ -16,7 +16,7 @@ from typing import Union
 
 class TestLinParser(unittest.TestCase):
     def test_basicParser(self):
-        lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
+        lp: LinParser = LinParser(path=str(TEST_DATAS / "test2.lin")).parse()
 
         board, deal, vulnerable, play = lp.get_all()
 
@@ -39,14 +39,14 @@ class TestLinParser(unittest.TestCase):
             self.assertEqual(len(hand), 13)
 
     def test_history(self):
-        lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
+        lp: LinParser = LinParser(path=str(TEST_DATAS / "test2.lin")).parse()
         history = lp.get_play()
 
         string_counter = 0
 
         for card in history:
             if isinstance(card, str):
-                ++string_counter
+                string_counter += 1
             self.assertIsInstance(card, (Card, str))
 
         self.assertLessEqual(

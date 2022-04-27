@@ -71,7 +71,7 @@ class Test_Table(Scene):
 
 class Table_play_test(Scene):
     def construct(self):
-        lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
+        lp: LinParser = LinParser(path=str(TEST_DATAS / "test2.lin")).parse()
 
         board, deal, vulnerable, play = lp.get_all()
 
@@ -90,4 +90,9 @@ class Table_play_test(Scene):
         t = m_Table(deal)
 
         self.play(FadeIn(t))
+
+        for _ in range(51):
+            self.play(t.play_card(play.get_current_card()))
+            play.next()
+
         self.wait()

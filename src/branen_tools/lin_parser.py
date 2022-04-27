@@ -115,7 +115,7 @@ class LinParser:
                 stake = "X"
                 continue
             if x[1] in ["S", "H", "C", "D", "N"]:
-                contract = x + stake
+                self.contract = x + stake
                 strain = x[1:]
                 break
 
@@ -126,22 +126,29 @@ class LinParser:
         declarer = ["S", "W", "N", "E"][(declarerIndex + dealerIndex - 1) % 4]
 
         # Extract play
-        pp = linList[3::]
+        pp = linList[3:]
         pp = [p.split("|")[1::2] for p in pp]
         if pp[-1] == []:
             claim = 0
         else:
             claim = pp[-1][-1]
 
-        play = ""
+        play = []
         for x in pp:
             if x == []:
                 continue
             t = [""] * 4
             for j in range(len(x)):
                 t[j] = x[j]
-            play = play + "{0[0]:<4}{0[1]:<4}{0[2]:<4}{0[3]:<4}\n".format(t)
-        play = [numToDirection(declarerIndex + 1), play]
+            #######################
+            play += t
+            #######################
+            # print(f"t = {t} \n play = {play}")
+        # play = play + "{0[0]:<4}{0[1]:<4}{0[2]:<4}{0[3]:<4}".format(t)
+
+        # play = [numToDirection(declarerIndex + 1), play]
+
+        play = list(filter(lambda n: n != "", play))
 
         ## End of the Black Box
 
@@ -154,14 +161,21 @@ class LinParser:
 
         return self
 
+    def is_claim(self, card: str):
+        suits = ["S", "H", "D", "C"]
+
+        return card[0] not in suits
+
     def preprocess_play(self, play: List[str]) -> History:
         history = []
-        for c in play[1].split(" "):
-            c = c.strip()
 
-            if len(c) == 1:
+        for c in play:
+            if len(c) > 2 or len(c) < 1:
+                raise ValueError(f"The card is not in correct format! ({c})")
+
+            if self.is_claim(c):
                 history.append(c)
-            elif len(c) != 0:  # TODO len 0 is weird
+            else:
                 history.append(Card(c[0], c[1]))
 
         return History(history=history)
@@ -183,8 +197,13 @@ class LinParser:
 
             hands[q[quarter]] = hand
 
-        # TODO dealer is not declarer
-        return Table(hands, dealer=self.dealer)
+        #############################
+        # TODO trump
+        #############################
+
+        return Table(
+            hands, trump=self.contract[0], dealer=self.dealer, declarer=self.declarer
+        )
 
     def get_board(self) -> int:
         if self.board is None:

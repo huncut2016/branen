@@ -1,6 +1,7 @@
 from __future__ import annotations
 import inspect
 from functools import total_ordering
+from shutil import ExecError
 from typing import Optional, Any
 
 
@@ -99,26 +100,26 @@ class Card:
         # if both of them are a trump
 
         if self.get_suit() == trump and other.get_suit() == trump:
-            return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
+            return self.VALUE_MAP[self.get_value()] > other.VALUE_MAP[other.get_value()]
 
         if self.get_suit() == trump:
             return True
 
         if other.get_suit() == trump:
-            return True
+            return False
 
         # if btoth of them are from the starting suit
 
         if self.get_suit() == starting_suit and other.get_suit() == starting_suit:
-            return self.VALUE_MAP[self.get_value()] < other.VALUE_MAP[other.get_value()]
+            return self.VALUE_MAP[self.get_value()] > other.VALUE_MAP[other.get_value()]
 
         if self.get_suit() == starting_suit:
             return True
 
         if other.get_suit() == starting_suit:
-            return True
+            return False
 
-        return False
+        raise Exception("Unknown case!")
 
     def is_same(self, other: Any) -> bool:
         if isinstance(other, str):

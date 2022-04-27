@@ -12,9 +12,12 @@ sys.path.append(str(dir_path))
 from branen.Card import Card
 from branen.Table import Table
 from branen.Hand import Hand
+from branen_tools.lin_parser import LinParser
 
 
 # from manim_branen.m_Card import m_Card
+
+TEST_DATAS: Path = Path(__file__).absolute().parent / "test_datas"
 
 
 class TestCard(unittest.TestCase):
@@ -96,8 +99,26 @@ class TestTable(unittest.TestCase):
 
         self.assertRaises(Exception, test_wrong_play(p, table))
 
+    # def test_play (self) :
+    #     lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
+
+    #     board, deal, vulnerable, play = lp.get_all()
+
+    #     for i in range(5):
+    #         t.play_card(play.get_current_card()))
+    #         play.next()
+
 
 #         self.assertEqual ()
+
+# lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
+
+# board, deal, vulnerable, play = lp.get_all()
+
+# for i in range(20):
+#     deal.play_card(play.get_current_card())
+#     play.next()
+
 
 if __name__ == "__main__":
     unittest.main()

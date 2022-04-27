@@ -4,7 +4,7 @@ from branen.Hand import Hand
 from manim_branen.m_Hand import m_Hand
 
 from warnings import warn
-from manim import VGroup, Square, Animation
+from manim import VGroup, Square, Group, AnimationGroup, FadeOut
 from manim.constants import UP, DOWN, RIGHT, LEFT
 from manim.utils import color
 from typing import Dict, Any, List, Union
@@ -51,6 +51,8 @@ class m_Table(VGroup):
     ):
         table_type = table_type.upper()
         self.table_type = table_type
+        self.in_play: List[Union[VGroup, Group]] = []
+        self.is_end_of_round: bool = False
 
         if not table_type in TABLE_TYPE:
             raise ValueError(f"Table type must be {', or'.join(TABLE_TYPE)}")
@@ -58,6 +60,7 @@ class m_Table(VGroup):
         if isinstance(hands, Table):
             self.table = hands
         else:
+            ## TODO wrong call
             self.table = Table(hands, dealer, trump)
 
         self.hands = VGroup()
@@ -93,16 +96,30 @@ class m_Table(VGroup):
 
         return t
 
-    def play_card(self, card: Card):
-        ## TODO
+    def play_card(self, card: Union[Card, str]) -> AnimationGroup:
+        ## TODO implement claim
+        ## TODO implement correct playing
+        result_animation = []
+
+        if self.is_end_of_round:
+            for c in self.in_play:
+                result_animation.append(FadeOut(c))
+            self.in_play = []
+
+        if isinstance(card, str):
+            raise NotImplementedError("Claim is not implemented yet!")
+
         func_name = inspect.stack()[0][3]  # the name of this function
         warn(f"Function {func_name} is not implemented fully yet!")
         # raise NotImplementedError(f"{func_name} is not implemented yet!")
         player = self.table.get_current_player()
-        self.table.play_card(card)
+        self.is_end_of_round = self.table.play_card(card)
         dir = quarter_to_dir[player]
 
         for hand in self.hands:
             for c in hand:
                 if c.get_card() == card:
-                    return c.play(self.sq, dir)
+                    self.in_play.append(c)
+                    result_animation.append(c.play(self.sq, dir))
+
+        return AnimationGroup(*result_animation)

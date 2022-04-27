@@ -8,7 +8,7 @@ sys.path.append(str(dir_path))
 
 
 import inspect
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from warnings import warn
 
 from branen.Card import Card
@@ -32,13 +32,13 @@ class Table:
         self.hands = hands
         self.dealer = dealer
         self.declarer = declarer
-        self.current_player = dealer
+        self.current_player = self.NEXT[declarer]
         self.starting_suit: Optional[str] = None
         self.round = curRound
         self.in_play: List[Card] = []
         self.trump = trump
 
-    def play_card_index(self, card_index: int) -> None:
+    def play_card_index(self, card_index: int) -> bool:
         """
         Play a card depend on an index.
 
@@ -47,9 +47,6 @@ class Table:
         card_index: :class: `int`
             The index of the card, that you want to play.
         """
-
-        if self.is_end_of_round():
-            self.end_the_round()
 
         playing_hand = self.hands[self.current_player]  # the hand who are coming
         card = playing_hand[card_index]
@@ -66,14 +63,21 @@ class Table:
 
         self.round += 1
 
+        if self.is_end_of_round():
+            self.end_the_round()
+            return True
+
+        return False
+
     def is_end_of_round(self) -> bool:
-        return self.round == 4
+        return self.round == 5
 
     def end_the_round(self) -> None:
         winning_card = self.win_the_trick()
         for quarter, hand in self.hands.items():
             if hand.has_card(winning_card):
                 self.current_player = quarter
+                break
 
         self.round = 1
         self.starting_suit = None
@@ -120,23 +124,27 @@ class Table:
         if not playing_hand.has_card(card):
             raise Exception(f"{self.current_player} has no card {card}")
 
-    def play_card(self, card: Card) -> None:
+    def play_card(self, card: Union[Card, str]) -> bool:
+        if isinstance(card, str):
+            raise NotADirectoryError("Claim is not implemented yet!")
 
         if not self.hands[self.current_player].has_card(card):
             raise Exception(
                 f"Current hand: {self.current_player} has not this card: {card}!"
             )
 
-        self.play_card_index(self.hands[self.current_player].get_card_index(card))
+        return self.play_card_index(
+            self.hands[self.current_player].get_card_index(card)
+        )
 
-    def reset(self, dealer: str = "N") -> None:
+    def reset(self) -> None:
         """
         Reset the table
         """
 
-        self.dealer = dealer
-        self.current_player = dealer
+        self.current_player = self.NEXT[self.declarer]
 
+        ## TODO make more pythonic
         for key in self.hands:
             cards: Hand = self.hands[key]
 
@@ -151,6 +159,9 @@ class Table:
 
     def get_dealer(self) -> str:
         return self.dealer
+
+    def get_declarer(self) -> str:
+        return self.declarer
 
     def get_hands(self) -> Dict[str, Hand]:
         return self.hands.copy()
