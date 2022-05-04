@@ -71,27 +71,13 @@ class Test_Table(Scene):
 
 class Table_play_test(Scene):
     def construct(self):
-        lp: LinParser = LinParser(path=str(TEST_DATAS / "test2.lin")).parse()
+        lp: LinParser = LinParser(path=str(TEST_DATAS / "test1.lin")).parse()
 
         board, deal, vulnerable, play = lp.get_all()
 
-        # hands = [
-        #     Card(suit, value) for suit in suits for value in values
-        # ]  # creating random hands
-        # shuffle(hands)
-
-        # hands_input = {
-        #     "E": Hand(hands[:13]),
-        #     "W": Hand(hands[13:26]),
-        #     "N": Hand(hands[26:39]),
-        #     "S": Hand(hands[39:]),
-        # }
-
-        t = m_Table(deal)
-
         self.play(FadeIn(t))
 
-        for _ in range(51):
+        for _ in range(23):
             self.play(t.play_card(play.get_current_card()))
             play.next()
 
