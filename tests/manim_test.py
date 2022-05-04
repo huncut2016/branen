@@ -75,9 +75,10 @@ class Table_play_test(Scene):
 
         board, deal, vulnerable, play = lp.get_all()
 
+        t = m_Table(deal)
         self.play(FadeIn(t))
 
-        for _ in range(23):
+        for _ in range(13):
             self.play(t.play_card(play.get_current_card()))
             play.next()
 

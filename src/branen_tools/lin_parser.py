@@ -1,4 +1,7 @@
-# Source: https://github.com/kevinywlui/lin2pbn
+"""
+    Source: https://github.com/kevinywlui/lin2pbn
+            https://github.com/yichijin/bridgescape
+"""
 
 # raise NotImplementedError("This module is not implemented yet!")
 from __future__ import annotations
