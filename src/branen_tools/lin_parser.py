@@ -111,11 +111,11 @@ class LinParser:
 
         stake = ""
         for x in bids[::-1]:
-            if x == "XX":
+            if x == "XX" or x == "dd":
                 stake = "XX"
                 continue
-            if x == "X" and stake != "XX":
-                stake = "X"
+            if (x == "X" or x == "d"):
+                if stake != "XX": stake = "X"
                 continue
             if x[1] in ["S", "H", "C", "D", "N"]:
                 self.contract = x + stake
@@ -205,7 +205,7 @@ class LinParser:
         #############################
 
         return Table(
-            hands, trump=self.contract[0], dealer=self.dealer, declarer=self.declarer
+            hands, trump=self.contract[1], dealer=self.dealer, declarer=self.declarer
         )
 
     def get_board(self) -> int:
