@@ -1,17 +1,10 @@
 from __future__ import annotations
 
 """
-    Source: https://github.com/kevinywlui/lin2pbn
+ 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  Source: https://github.com/kevinywlui/lin2pbn
             https://github.com/yichijin/bridgescape
 """
 
-import re
-from typing import Dict, Optional, List, Tuple
-import textwrap
-from branen.Table import Table
-from branen.Hand import Hand
-from branen.Card import Card
-from branen.History import History
 
 # raise NotImplementedError("This module is not implemented yet!")
 
@@ -20,6 +13,15 @@ from pathlib import Path
 
 dir_path = Path(__file__).absolute().parent.parent
 sys.path.append(str(dir_path))
+
+import re
+from typing import Dict, Optional, List, Tuple
+import textwrap
+from branen.Table import Table
+from branen.Hand import Hand
+from branen.Card import Card
+from branen_tools.HistoryFrame import HistoryFrame
+from branen.History import History
 
 
 def numToDirection(n):
@@ -62,7 +64,7 @@ class LinParser:
 
     def parse(self) -> LinParser:
         """Parses the .lin to a manageable format."""
-        ## Start of the Black Box
+        # Start of the Black Box
 
         linstring = self.linstring
 
@@ -180,7 +182,7 @@ class LinParser:
             if self.is_claim(c):
                 history.append(c)
             else:
-                history.append(Card(c[0], c[1]))
+                history.append(HistoryFrame(c[0], c[1]))
 
         return History(history=history)
 

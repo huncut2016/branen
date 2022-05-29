@@ -8,15 +8,16 @@ sys.path.append(str(dir_path))
 
 
 from branen.Card import Card
+from branen_tools.HistoryFrame import HistoryFrame
 from typing import List, Union
 
 
 class History:
-    def __init__(self, history: List[Union[Card, str]]) -> None:
+    def __init__(self, history: List[HistoryFrame]) -> None:
         self.history = history
         self.index = 0
 
-    def next(self) -> Union[Card, str]:
+    def next(self) -> HistoryFrame:
         self.index += 1
 
         if self.index >= len(self.history):
@@ -24,8 +25,10 @@ class History:
 
         return self.get_current_card()
 
-    def get_current_card(self) -> Union[Card, str]:
-        return self.history[self.index]
+    def get_current_card(self) -> HistoryFrame:
+        card = self.history[self.index]
+
+        return card
 
     def __iter__(self):
         return iter(self.history)
@@ -39,7 +42,7 @@ class History:
     def set_index(self, index: int) -> None:
         self.index = index
 
-    def move_to_card(self, card: Union[Card, str]) -> None:
+    def move_to_card(self, card: HistoryFrame) -> None:
         for i, c in enumerate(self.history):
             if c == card:
                 self.index = i
