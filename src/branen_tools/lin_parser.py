@@ -62,6 +62,8 @@ class LinParser:
         self.vulnerable: str
         self.play: History
 
+        self.parse()
+
     def parse(self) -> LinParser:
         """Parses the .lin to a manageable format."""
         # Start of the Black Box
@@ -180,7 +182,7 @@ class LinParser:
                 raise ValueError(f"The card is not in correct format! ({c})")
 
             if self.is_claim(c):
-                history.append(c)
+                history.append(HistoryFrame(claimed=c))
             else:
                 history.append(HistoryFrame(c[0], c[1]))
 
@@ -212,26 +214,18 @@ class LinParser:
         )
 
     def get_board(self) -> int:
-        if self.board is None:
-            raise Exception("First call the parse method!")
 
         return self.board
 
     def get_deal(self) -> Table:
-        if self.board is None:
-            raise Exception("First call the parse method!")
 
         return self.deal
 
     def get_vulnerable(self) -> str:
-        if self.board is None:
-            raise Exception("First call the parse method!")
 
         return self.vulnerable
 
     def get_play(self) -> History:
-        if self.board is None:
-            raise Exception("First call the parse method!")
 
         return self.play
 
