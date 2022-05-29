@@ -23,7 +23,7 @@ class HistoryFrame:
             self.card = None
 
     def is_claim(self) -> bool:
-        return self.card is None
+        return self.claimed is not None
 
     def get_card(self) -> Card:
         if self.is_claim():
@@ -34,6 +34,7 @@ class HistoryFrame:
     def __str__(self) -> str:
         if self.is_claim():
             return self.claimed
+
         return str(self.card)
 
     def __repr__(self) -> str:

@@ -184,7 +184,7 @@ class LinParser:
             if self.is_claim(c):
                 history.append(HistoryFrame(claimed=c))
             else:
-                history.append(HistoryFrame(c[0], c[1]))
+                history.append(HistoryFrame(suit=c[0], value=c[1]))
 
         return History(history=history)
 

@@ -78,8 +78,12 @@ class Table_play_test(Scene):
         t = m_Table(deal)
         self.play(FadeIn(t))
 
-        for _ in range(13):
-            self.play(t.play_card(play.get_current_card()))
+        for _ in range(52):
+            current_card = play.get_current_card()
+            if current_card.is_claim():
+                break
+
+            self.play(t.play_card(current_card.get_card()))
             play.next()
 
         self.wait()
