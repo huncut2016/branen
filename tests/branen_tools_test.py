@@ -1,11 +1,6 @@
 import sys
 from pathlib import Path
 
-dir_path = Path(__file__).absolute().parent.parent / "src"
-sys.path.append(str(dir_path))
-
-TEST_DATAS: Path = Path(__file__).absolute().parent / "test_datas"
-
 import unittest
 from branen_tools.lin_parser import LinParser
 from branen.Table import Table
@@ -13,11 +8,18 @@ from branen.History import History
 from branen.Card import Card
 from typing import Union
 
+dir_path = Path(__file__).absolute().parent.parent / "src"
+sys.path.append(str(dir_path))
+
+TEST_DATAS: Path = Path(__file__).absolute().parent / "test_datas"
+
 
 class TestLinParser(unittest.TestCase):
     def test_basicParser(self):
         for i in range(21):
-            lp: LinParser = LinParser(path=str(TEST_DATAS / "much test" / "{}.lin".format(i + 1))).parse()
+            lp: LinParser = LinParser(
+                path=str(TEST_DATAS / "much test" / "{}.lin".format(i + 1))
+            ).parse()
 
             board, deal, vulnerable, play = lp.get_all()
 
@@ -40,13 +42,15 @@ class TestLinParser(unittest.TestCase):
                 self.assertEqual(len(hand), 13)
 
             for x in play:
-                if (x.get_suit() not in ("S", "H", "D", "C")):
+                if x.get_suit() not in ("S", "H", "D", "C"):
                     break
                 deal.play_card(x)
 
     def test_history(self):
         for i in range(21):
-            lp: LinParser = LinParser(path=str(TEST_DATAS / "much test" / "{}.lin".format(i + 1))).parse()
+            lp: LinParser = LinParser(
+                path=str(TEST_DATAS / "much test" / "{}.lin".format(i + 1))
+            ).parse()
             history = lp.get_play()
 
             string_counter = 0
@@ -57,7 +61,9 @@ class TestLinParser(unittest.TestCase):
                 self.assertIsInstance(card, (Card, str))
 
             self.assertLessEqual(
-                string_counter, 1, f"History contains more than 1 claims ({string_counter})"
+                string_counter,
+                1,
+                f"History contains more than 1 claims ({string_counter})",
             )
 
 

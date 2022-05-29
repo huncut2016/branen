@@ -1,25 +1,25 @@
+from __future__ import annotations
+
 """
     Source: https://github.com/kevinywlui/lin2pbn
             https://github.com/yichijin/bridgescape
 """
 
+import re
+from typing import Dict, Optional, List, Tuple
+import textwrap
+from branen.Table import Table
+from branen.Hand import Hand
+from branen.Card import Card
+from branen.History import History
+
 # raise NotImplementedError("This module is not implemented yet!")
-from __future__ import annotations
 
 import sys
 from pathlib import Path
 
 dir_path = Path(__file__).absolute().parent.parent
 sys.path.append(str(dir_path))
-
-
-import re
-from typing import Dict, Optional, List, Tuple, Union
-import textwrap
-from branen.Table import Table
-from branen.Hand import Hand
-from branen.Card import Card
-from branen.History import History
 
 
 def numToDirection(n):
@@ -114,8 +114,9 @@ class LinParser:
             if x == "XX" or x == "dd":
                 stake = "XX"
                 continue
-            if (x == "X" or x == "d"):
-                if stake != "XX": stake = "X"
+            if x == "X" or x == "d":
+                if stake != "XX":
+                    stake = "X"
                 continue
             if x[1] in ["S", "H", "C", "D", "N"]:
                 self.contract = x + stake
